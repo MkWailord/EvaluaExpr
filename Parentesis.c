@@ -12,7 +12,9 @@ main()
 	Initialize(pila1);	
 	tamCadena=strlen(expresion);
 	
-	scans("%s", expresion)
+	scanf("%s", expresion);
+	
+	
 	
 	
 	
