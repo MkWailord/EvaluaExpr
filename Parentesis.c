@@ -33,4 +33,40 @@ main()
 		}
 	}
 	
+	for(i=0;i<=tamCadena;i++)
+	{
+		if((expresion[i]!='(')&&(expresion[i]!='('))
+		{
+			if((expresion[i]=='+')||(expresion[i]=='-'))
+			{
+
+			}
+			if((expresion[i]=='*')||(expresion[i]=='/'))
+			{
+			
+			
+			}
+			if((expresion[i]=='^'))
+			{
+			
+			}
+			else
+			{
+				
+			}
+			
+			
+
+		else if(expresion[i]==')')
+		{
+
+			if(Empty(&pila1)==1)
+				{
+					printf("ERROR");
+					exit(1);
+				}
+			e1=pop(&pila1)
+		}
+	}
+	
 }
