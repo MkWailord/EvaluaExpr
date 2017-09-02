@@ -6,14 +6,14 @@
 
 main()
 {
-	char expresion[MAXCADENA]	
-	pila pila1;	
-	elemento e1;	
-	Initialize(pila1);	
+	char expresion[MAXCADENA]
+	pila pila1;
+	elemento e1;
+	Initialize(pila1);
 	tamCadena=strlen(expresion);
-	
+
 	scanf("%s", expresion)
-	
+
 	for(i=0;i<=tamCadena;i++)
 	{
 		if(expresion[i]=='(')
@@ -32,41 +32,103 @@ main()
 			e1=pop(&pila1)
 		}
 	}
-	
-	for(i=0;i<=tamCadena;i++)
+
+}
+
+InAPos(char infija[], char postfija[])
+{
+	int posicion, vacia;
+	int posicion2=0;
+	char simboloA= '+';
+	char simbolo;
+	pila pilaAux;
+	Initialize(pila);
+
+	for(posicion=0;(simbolo=infija[posicion])!='\0';posicion++)
 	{
-		if((expresion[i]!='(')&&(expresion[i]!='('))
-		{
-			if((expresion[i]=='+')||(expresion[i]=='-'))
-			{
-
-			}
-			if((expresion[i]=='*')||(expresion[i]=='/'))
-			{
-			
-			
-			}
-			if((expresion[i]=='^'))
-			{
-			
-			}
-			else
-			{
-				
-			}
-			
-			
-
-		else if(expresion[i]==')')
+		if(isOperand(simbolo))
+			postfija[posicion2]=simbolo;
+			posicion2++;
+		else
 		{
 
-			if(Empty(&pila1)==1)
-				{
-					printf("ERROR");
-					exit(1);
-				}
-			e1=pop(&pila1)
+			/*vacia=Empty(pilaAux);
+			if(!vacia)
+				simboloA=pop(&pilaAux)
+
+			while(prcd(simboloA, simbolo))
+			{
+				postfija[posicion2++]=simboloA;
+		}
+		while(!empty(&pilaAux))
+			postfija[posicion2++]=pop(&pilaAux);
+		postfija[posicion2]='\0';
 		}
 	}
-	
+
+
+int isOperand(char x)
+{
+	if((x!='+')&&(x!='-')&&(x!='*')&&(x!='/')&&(x!='$'))
+		return TRUE;
+	else
+		return FALSE;
+}
+
+int prcd(char a, char b)
+{
+	int ValorA,ValorB;
+	if(a=='+'||(a=='-')
+		valorA=1;
+	if(a=='*'||(a=='/')
+		valorA=2;
+	if(a==''||(a=='-')
+		valorA=3;
+
+	if(b=='+'||(b=='-')
+		valorB=1;
+	if(b=='*'||(b=='/')
+		valorB=2;
+	if(b==''||(b=='-')
+		valorB=3;
+
+	if((ValorA==ValorB)||(ValorA>ValorB))
+		return TRUE;
+	return FALSE;
+}
+
+double oper(int symb, double op1, double op2)
+{
+	switch(symb){
+		case '+': return(op1+op2);
+		case '-': return(op1-op2);
+		case '*': return(op1*op2);
+		case '/': return(op1/op2);
+		case '$': return(pow(op1,op2));
+		default: printf("Error en la operacion");
+			exit(1);
+	}
+}
+
+double eval(char expr[])
+{
+	int c, posicion;
+	double opnd1, opnd2, valor;
+	pila pilaAux;
+	elemento aux;
+	Initialize(&pilaAux);
+	for(position=0;(c=expr[position])!='\0';position++){
+		if(isdigit(c)){
+			aux.d=c-'0';
+			push(&pilaAux,aux);
+		}
+		else{
+			aux=Pop(&pilaAux);
+			opnd2=aux.d;
+			aux=Pop(&pilaAux);
+			opnd1=aux.d;
+			aux.d=oper(opnd1,opnd2);
+			push(&pilaAux, aux);
+		}
+	}
 }
