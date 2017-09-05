@@ -2,7 +2,7 @@
 
 void Initialize(pila *s)
 {
-	(*s).tope=-1; //s->tope=-1; 
+	(*s).tope=-1; //s->tope=-1;
 	return;
 }
 
@@ -23,6 +23,7 @@ elemento Pop(pila *s)
 
 boolean Empty(pila *s)
 {
+	boolean b;
   if((*s).tope==-1)
     b=TRUE;
   else

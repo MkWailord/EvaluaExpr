@@ -6,14 +6,13 @@
 
 main()
 {
-	char expresion[MAXCADENA]
+	char expresion[MAXCADENA];
 	pila pila1;
 	elemento e1;
 	Initialize(pila1);
 	tamCadena=strlen(expresion);
 
-	scanf("%s", expresion)
-
+	scanf("%s", expresion);
 	for(i=0;i<=tamCadena;i++)
 	{
 		if(expresion[i]=='(')
@@ -32,39 +31,48 @@ main()
 			e1=pop(&pila1)
 		}
 	}
-
 }
 
 InAPos(char infija[], char postfija[])
 {
 	int posicion, vacia;
 	int posicion2=0;
-	char simboloA= '+';
+	char simboloMayor= '+';
 	char simbolo;
 	pila pilaAux;
 	Initialize(pila);
+	elemento aux;
 
 	for(posicion=0;(simbolo=infija[posicion])!='\0';posicion++)
-	{
 		if(isOperand(simbolo))
 			postfija[posicion2]=simbolo;
 			posicion2++;
 		else
 		{
-
-			/*vacia=Empty(pilaAux);
 			if(!vacia)
-				simboloA=pop(&pilaAux)
-
-			while(prcd(simboloA, simbolo))
+				simboloMayor=pop(&pilaAux);
+			while(prcd(simboloMayor, simbolo))
 			{
-				postfija[posicion2++]=simboloA;
-		}
+				postfija[posicion2++]=simboloMayor;
+				if(!vacia)
+					simboloMayor=pop(&pilaAux);
+			}
+			if(!vacia)
+				{
+					aux.c=simboloMayor;
+					push(&pilaAux, aux);
+				}
+			if(vacia||symb!=')')
+				{
+					aux.c=simbolo
+					push(&pilaAux, aux);
+				}
+			else
+				simboloMayor=pop(&pilaAux);
+	}
 		while(!empty(&pilaAux))
 			postfija[posicion2++]=pop(&pilaAux);
-		postfija[posicion2]='\0';
-		}
-	}
+}
 
 
 int isOperand(char x)
