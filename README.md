@@ -1,4 +1,4 @@
-# TADPila
+# EvaluaExpr
 Tema 02 Estructura de Datos: TAD Pila, Evaluación de paréntesis y expresiones.
 En la primer branch se realizo la implementacion de la pila, es decir,
 se creo la libreria de TADPilaEst.c en base a las especificaciones dadas
