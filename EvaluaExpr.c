@@ -54,11 +54,14 @@ void main()
 																 //es decir, actualmente la funcion no puede regresar false
 
 	printf("\nLa expresion infija es: %s \n", &expresion);
-	printf("\nLa expresion postfija: ");
+	system("PAUSE");
+	printf("\nLa expresion postfija es: ");
 	InfAPos(expresion, posfija);
-
+	system("PAUSE");
 	result=eval(posfija);
-	printf("\nEl resultado de la expresion Postfija es: %.2f", result);
+	printf("\nEl resultado de la expresion Postfija es: %.2f \n", result);
+
+	system("PAUSE");
 	//printf("%s \n", &posfija);
 	//printf("%s", posfija);
 	/*printf("Escriba a: ");
@@ -214,7 +217,7 @@ void InfAPos(char infija[], char postfija[]) //Transforma una funcion de infija 
 				postfija[posicion2++]=aux.c;
 		}
 		postfija[posicion2]='\0';
-		printf("%s", postfija);
+		printf("%s\n", postfija);
 }
 
 
