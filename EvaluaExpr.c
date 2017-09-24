@@ -1,5 +1,5 @@
 /*
-AUTOR: Equipo Lambda; Casas Carbajal Jose Mauricio y Jesus Salgado (C) Septiembre 2017
+AUTOR: Equipo Lambda; Casas Carbajal Jose Mauricio y Jesus Salgado Gallegos (C) Septiembre 2017
 VERSIÃ“N: 1.0
 
 DESCRIPCION: Aplicacion de la pila para comprobacion de parentesis en una expresion,
@@ -12,10 +12,11 @@ en clase. Ambas estructuras elemento, ya sea la de la implementacion estatica o 
 COMPILACION: 	gcc -o EvaluaExpr EvaluaExpr.c TADPila(Din|Est).o (Si se tiene el objeto de la implementacion)
 				gcc -o EvaluaExpr EvaluaExpr.c TADPila(Din|Est).c (Si se tiene el fuente de la implementacion)
 
-EJECUCION: EvaluaParentesis.exe (En Windows) - ./EvaluaParentesis (En Linux)
+EJECUCION: EvaluaExpr.exe (En Windows) - ./EvaluaExpr (En Linux)
 */
 
 #include "TADPilaEst.h"
+//#include "TADPilaDin.h"
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -27,19 +28,20 @@ EJECUCION: EvaluaParentesis.exe (En Windows) - ./EvaluaParentesis (En Linux)
 
 
 /* ***PROTOTIPOS DE FUNCIONES*** */
-boolean isOperand(char x);
-boolean prcd(char a, char b);
-void InfAPos(char infija[], char postfija[]);
-float oper(char symb, float op1, float op2);
-float eval(char expr[]);
-float pvalores(char posfijav[]);
-boolean compParentesis(char expresion[]);
+boolean isOperand(char x); //Retorna TRUE o FALSE si el signo 'x' es un operando, recibe un caracter char.
+boolean prcd(char a, char b); //Retorna TRUE si el signo 'a' tiene mayor precedencia que el 'b', recibe dos caracter char.
+void InfAPos(char infija[], char postfija[]); //Transforma una funcion de infija a postfija, recibe dos arreglos de char.
+boolean compParentesis(char expresion[]);	 //Retorna TRUE o FALSE si los parentesis estan correctamente escritos, recibe un arreglo de char
+int  *pedirCoeficientes(char *cadena); //Pide los coeficientes de las variables, recibe un arreglo de char, el cual es la cadena postfija
+int resolverPosfija(int *valores, char *cadena); //Retorna el resultado de una expresion postfija, recibe los valores de las variables y la expresion postfija
 
 void main()
 {
 	char expresion[MAXCADENA], posfija[MAXCADENA];
 	char simb[MAXCADENA], simb2;
 	float a,b, result;
+	int *valores;
+	valores=(int*)malloc(65*sizeof(int));
 	boolean aux;
 	printf("\t\t//// BIENVENIDO ////\n\n");
 	printf("Programa que recibe una expresion infija, la cual se transformara en\n");
@@ -58,26 +60,26 @@ void main()
 	printf("\nLa expresion postfija es: ");
 	InfAPos(expresion, posfija);
 	system("PAUSE");
-	result=eval(posfija);
+
+	valores=pedirCoeficientes(posfija);
+
+	printf("\nLa expresion postfija es %s: ", posfija);
+	result=resolverPosfija(valores, posfija);
 	printf("\nEl resultado de la expresion Postfija es: %.2f \n", result);
 
 	system("PAUSE");
-	//printf("%s \n", &posfija);
-	//printf("%s", posfija);
-	/*printf("Escriba a: ");
-	scanf("%f",&a);
-	printf("Escriba b: ");
-	scanf("%f",&b);
-	printf("%.2f", oper(simb,a,b));
-
-
-	printf("%s", posfija);
-	pvalores(posfija);
-	*/
-
 
 }
 
+//DEFINICIÓN DE FUNCIONES
+
+/*
+boolean compParentesis(char expresion[])
+Descripción: Comprueba que los parentesis de una expresion esten correctamente escritos.
+Recibe: char expresion[] (Expresion infija)
+Devuelve: boolean (TRUE o FALSE según sea el caso)
+Observaciones: La expresion a comprobar debe ser una expresion postfija, no es posible que la funcion retorne FALSE, puesto que es considerado error.
+*/
 boolean compParentesis(char expresion[])
 {
 	int i, tamCadena;
@@ -108,6 +110,14 @@ boolean compParentesis(char expresion[])
 	return TRUE;
 }
 
+/*
+boolean isOperand(char x)
+Descripción: Funcion para saber si un signo es un operando o un operador.
+Recibe: (char x) (x es el signo a comprobar)
+Devuelve: boolean (TRUE o FALSE según sea el caso)
+Observaciones: Si el signo x es un operando o parentesis devuelve TRUE, de lo contrario devuelve FALSE
+							 en este caso, un operando puede ser una letra que va desde A hasta Z (debido a que mas adelante se pide el valor de esta variable)
+*/
 boolean isOperand(char x) //Retorna TRUE o FALSE si el signo 'x' es un operando
 {
 	boolean a;
@@ -117,7 +127,14 @@ boolean isOperand(char x) //Retorna TRUE o FALSE si el signo 'x' es un operando
 		a=FALSE;
 	return a;
 }
-//
+
+/*
+boolean prcd(char a, char b)
+Descripción: Funcion para saber si un operador precede a otro operador.
+Recibe: (char a, char b)
+Devuelve: boolean (TRUE o FALSE según sea el caso).
+Observaciones: Si el signo a tiene mayor prioridad que el signo b, retorna TRUE, de lo contrario retorna FALSE.
+*/
 boolean prcd(char a, char b) //Retorna TRUE si el signo 'a' tiene mayor precedencia que el 'b'
 {
 	int valorA,valorB;
@@ -145,6 +162,13 @@ boolean prcd(char a, char b) //Retorna TRUE si el signo 'a' tiene mayor preceden
 		return FALSE;
 }
 
+/*
+void InfAPos(char infija[], char postfija[])
+Descripción: Funcion para transformar una expresion infija a postfija.
+Recibe: (char infija[], char postfija[])  (Al ser cadenas, el paso es por referencia, por lo que la cadena postfija que recibe cambia tambien en el main)
+Devuelve:
+Observaciones: Esta funcion hace uso de la funcion "prcd" y de la funcion "isOperand", por lo que deben ser implementadas antes.
+*/
 void InfAPos(char infija[], char postfija[]) //Transforma una funcion de infija a postfija
 {
 	int posicion;
@@ -220,96 +244,132 @@ void InfAPos(char infija[], char postfija[]) //Transforma una funcion de infija 
 		printf("%s\n", postfija);
 }
 
-
-float oper(char symb, float op1, float op2) //Se realizara la operacion dependiendo del caso
+/*
+int  *pedirCoeficientes(char *cadena)
+Descripción: Funcion que pide los coeficientes de una cadena postfija
+Recibe: (char *cadena) (Cadena que guarda una expresion matematica)
+Devuelve: int (Arreglo con los valores de las variables).
+Observaciones: Esta funcion no ha sido probada en una expresion infija, sin embargo es posible que pueda guardar sus valores.
+*/
+int  *pedirCoeficientes(char *cadena) //Pide los coeficientes de las variables
 {
-	switch(symb){
-		case '+': return(op1+op2);
-		case '-': return(op1-op2);
-		case '*': return(op1*op2);
-		case '/': return(op1/op2);
-		case '$': return(pow(op1,op2));
-		default: printf("\nError en la operacion");
-			exit(1);
-	}
-}
 
-float eval(char expr[]) //Evalua una expresion postfija
-{
-	int c, position;
-	double opnd1, opnd2, valor;
-	pila pilaAux;
-	elemento aux;
-	Initialize(&pilaAux);
-	for(position=0;(c=expr[position])!='\0';position++){
-		if(isdigit(c)) //si el simbolo a evaluar es un digito
-		{
-			aux.d=c-'0'; //Transformacion de char (tomando en cuenta que el char es un numero) a int
-			Push(&pilaAux,aux);
-		}
-		else{ //el simbolo a evaluar es un operador
-			aux=Pop(&pilaAux);
-			opnd2=aux.d; //Se saca el primer operando
-			aux=Pop(&pilaAux);
-			opnd1=aux.d; //Se saca el segundo operando
-			aux.d=oper(c,opnd1,opnd2); //Se realiza la operacion de los operandos, dependiendo del signo, se asigna al elemento aux
-			Push(&pilaAux, aux); //se guarda el resultado de la operacion en la pila
-		}
-	}
-	return aux.d; //retorna el valor final
-}
+	char *variables;
+	variables = (char*)malloc(65*sizeof(char)); //Pide memoria para el arreglo variables
 
-float pvalores(char posfijav[])
-{
-    char posfijan[strlen(posfijav)];
-    char posfijan1[strlen(posfijav)];
-    int i,j=0,h=0,k=0,z;
-    unsigned long s;
-    s=strlen(posfijav);
-	double resul;
-    for(i=0;i<s;i++)
-    {
-        posfijan[i]='\0';
-        posfijan1[i]=0;
-    }
-    for(i=0;i<s;i++)
-    {
-        if ((posfijav[i]>=65 && posfijav[i]<=90)||(posfijav[i]>=97 && posfijav[i]<=122))
-        {
-            if(i>0)
-            {
-                for(h=0;h<s;h++)
-                {
-                    if(posfijav[i]==posfijan[h])
-                    {
-                        k=1;
-                    }
-                }
-            }
-            if(k==0)
-            {
-                posfijan[j]=posfijav[i];
-                printf("Eligja el valor de %c: ",posfijav[i]);
-                scanf(" %s",&posfijan1[j]);
-                j++;
-            }
-            k=0;
-        }
-    }
-    for(i=0;i<j;i++)
-    {
-        printf("%c es igual a %c",posfijan[i],posfijan1[i]);
-    }
-	for(i=0;i<j;i++)
+	int *valores;
+	valores = (int*)malloc(65*sizeof(int)); //Pide memoria para el arreglo valores
+
+
+	int j;
+	for (j = 0; j < 65; j++)
 	{
-		for(z=0;z<j;z++)
+		variables[j] = 'N'; //Verificacion para saber si ya pidio el valor o no
+	}
+
+	int i = 0;
+
+	while(i < strlen(cadena))
+	{
+		if((cadena[i] > 64 && cadena[i] < 91) || (cadena[i] > 96 && cadena[i] < 123) ) //Valida que solo ingresen numeros en ASCII
 		{
-			if(posfijav[i]==posfijan[z])
+			if(variables[cadena[i]%65] != 'Y' ) //Si aun no pide el valor
 			{
-				posfijav[i]==posfijan1[z];
+				printf("Ingresa el valor para %c: ", cadena[i]);
+				scanf("%d",&valores[cadena[i]%65]); //Transforma el el valor ascii de la letra
+				variables[cadena[i]%65] = 'Y';  //Cambia la verificacion para saber que ya se pidio el valor
+			}
+
+		}
+
+
+		i++;
+	}
+
+	free(variables);
+	return valores;
+
+
+}
+
+/*
+int resolverPosfija(int *valores, char *cadena)
+Descripción: Funcion que resuelve una expresion postfija, recibe los valores de las variables y la expresion postfija
+Recibe: (int *valores, char *cadena) (El primer int es el arreglo que contiene los valores, el segundo arreglo de char es la expresion postfija)
+Devuelve: int (Resultado de la expresion postfija).
+Observaciones: Para un correcto funcionamiento, se recomienda usar la funcion pedirCoeficientes, ya que es la que retorna el arreglo que contiene los valores
+*/
+int resolverPosfija(int *valores, char *cadena)
+{
+
+	//Se crea Pila y se limpia
+	pila mi_pila;
+	elemento e,aux;
+
+    Initialize(&mi_pila);
+
+	int i=0, j;
+	elemento op1, op2;
+
+
+	while((e.c=cadena[i]) != '\0'){
+
+				//Valida que solo ingresen numeros en ASCII
+		if((cadena[i] > 64 && cadena[i] < 91) || (cadena[i] > 96 && cadena[i] < 123) ){
+			aux.c = valores[e.c%65];
+			Push(&mi_pila, aux);
+	}
+
+		else{
+			//En caso de percibir un + sacar 2 elementos y realizar el ultimo por el penultimo
+
+			if (e.c == '+')
+			{
+				op2 = Pop(&mi_pila);
+				op1 = Pop(&mi_pila);
+				aux.c = op1.c+op2.c;
+				Push(&mi_pila, aux);
+			}
+			//En caso de percibir un - sacar 2 elementos y realizarÃ¡ el ultimo menos el penultimo
+			if (e.c == '-')
+			{
+				op2 = Pop(&mi_pila);
+				op1 = Pop(&mi_pila);
+				aux.c = op1.c-op2.c;
+				Push(&mi_pila, aux);
+			}
+			//En caso de percibir un * sacar 2 elementos y realizar el ultimo por el penultimo
+
+			if (e.c == '*')
+			{
+				op2=Pop(&mi_pila);
+				op1=Pop(&mi_pila);
+				aux.c = op1.c*op2.c;
+				Push(&mi_pila, aux);
+			}
+			//En caso de percibir un / sacar¡ 2 elementos y realizar el ultimo entre el penultimo
+			if (e.c == '/')
+			{
+				op2 = Pop(&mi_pila);
+				op1 = Pop(&mi_pila);
+				aux.c = op1.c/op2.c;
+				Push(&mi_pila, aux);
+			}
+			//En caso de percibir un ^ sacar¡ 2 elementos y realizar¡ el ultimo elevado al penultimo
+			if (e.c == '$')
+			{
+				op2 = Pop(&mi_pila);
+				op1 = Pop(&mi_pila);
+				aux.c = pow(op1.c,op2.c);
+				Push(&mi_pila, aux);	//Posteriormente insertar¡ el resultado obtenido
 			}
 		}
-	resul=eval(posfijav);
+
+		i++;
 	}
-	return resul;
+
+	i = Pop(&mi_pila).c;
+
+	return i;
 }
+
