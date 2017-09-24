@@ -1,20 +1,22 @@
 /*
-LIBRERIA: Cabecera de el TAD PILA ESTÁTICA
-AUTOR: Edgardo Adrián Franco Martínez (C) Septiembre 2016
-VERSIÓN: 1.0
+LIBRERIA: Cabecera de el TAD PILA DINÁMICA
+AUTOR: Edgardo Adrián Franco Martínez (C) Septiembre 2012
+VERSIÓN: 1.3
 
 DESCRIPCIÓN: TAD pila o stack.
 Estructura de datos en la que se cumple:
 Los elementos se añaden y se remueven por un solo extremo.
 Este extremo es llamado “tope” de la pila.
 
-OBSERVACIONES: Hablamos de una Estructura de datos estática cuando se le
-asigna una cantidad fija de memoria para esa estructura
-antes de la ejecución del programa.
+OBSERVACIONES: Hablamos de una Estructura de datos dinámica
+cuando se le asigna memoria a medida que es necesitada,
+durante la ejecución del programa. En este caso la memoria
+no queda fija durante la compilación y se logrará este dinamismo
+a travez del modelo "nodo" el cuál se reservará dinamicamente logrando
+modelar una pila.
 */
 
 //DEFINICIONES DE CONSTANTES
-#define MAX_ELEMENT 1000
 #define TRUE	1
 #define FALSE	0
 
@@ -31,14 +33,21 @@ typedef struct elemento
 	double d;
 	int i;
 	//***
-	//***
 }elemento;
+
+//Definir un nodo que será utilizado para almacenar una posición de la pila (Nodo), lo que incluira a un elemento y a un apuntador al siguiente nodo
+typedef struct nodo
+{
+	//Elemento a almacenar en cada nodo de la pila
+	elemento e;
+	//Apuntador al elemento de debajo (Requerido por ser una implementación dinámica -Usuario: No modificar)
+	struct nodo *abajo;
+}nodo;
 
 //Definir una pila (Se modela con una estructura que unicamente incluye un puntero a "elemento")
 typedef struct pila
 {
-	elemento arreglo[MAX_ELEMENT];		//La pila es un arreglo estático de MAX_ELEMET
-	int tope; 							//El tope es un entero (Indice del arreglo de elementos)
+	nodo *tope;
 }pila;
 
 //DECLARACIÓN DE FUNCIONES
